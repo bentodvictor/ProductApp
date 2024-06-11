@@ -49,8 +49,13 @@ public class BaseEntityRepository<T> : IBaseEntityRepository<T> where T : BaseEn
 
         if (productEntity != null)
         {
-            _productContext.Set<T>().Update(entity);
+            // Detach the existing entity
+            _productContext.Entry(productEntity).State = EntityState.Detached;
         }
+
+        // Attach the updated entity and mark it as modified
+        _productContext.Set<T>().Attach(entity);
+        _productContext.Entry(entity).State = EntityState.Modified;
 
         return await _productContext.SaveChangesAsync() > 0 ? true : false;
     }

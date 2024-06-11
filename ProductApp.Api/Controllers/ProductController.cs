@@ -41,10 +41,13 @@ namespace ProductApp.Server.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<bool>> Update([FromBody] PutProductRequest productRequest)
+        public async Task<ActionResult<string>> Update(Guid id, [FromBody] PutProductRequest productRequest)
         {
-            var result = await _productService.UpdateAsync(productRequest);
-            return Ok(result);
+            var result = await _productService.UpdateAsync(id, productRequest);
+
+            return result == "Success"
+                ? Ok(result)
+                : BadRequest(result);
         }
 
         [HttpDelete("{id}")]

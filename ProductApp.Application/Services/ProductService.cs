@@ -50,11 +50,12 @@ public class ProductService
         return await _productRepository.DeleteAsync(id);
     }
 
-    public async Task<string> UpdateAsync(PutProductRequest productRequest)
+    public async Task<string> UpdateAsync(Guid id, PutProductRequest productRequest)
     {
         try
         {
-            _productRepository.CheckIfProductAlreadyExists(productRequest.Name);
+            if (id != productRequest.Id)
+                _productRepository.CheckIfProductAlreadyExists(productRequest.Name);
 
             var product = _mapper.Map<Product>(productRequest);
             var response = await _productRepository.UpdateAsync(product);
